@@ -14,6 +14,8 @@ module.exports = class PingCommand extends Command {
   }
 
   async run({ message, author }) {
-    message.reply("Operando e Gerenciando funções, para obter suporte digite: '/dv help'");
+    message.reply(
+      "Operando e Gerenciando funções, para obter suporte digite: '/dv help'"
+    );
   }
 };

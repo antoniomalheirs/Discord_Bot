@@ -22,7 +22,7 @@ module.exports = class FunctionLoader {
         const file = files[i];
         //console.log(`Loading function from: ${file}`);
         const loadedFunction = require(`../../${path}/${file}`);
-        
+
         if (typeof loadedFunction === "function") {
           loadedFunction.bind(this)(); // Chame a função se necessário
           //console.log(`Function from: ${file} loaded successfully.`);

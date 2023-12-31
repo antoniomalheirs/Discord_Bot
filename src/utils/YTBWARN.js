@@ -72,8 +72,8 @@ module.exports = async function (channelId) {
         `https://www.youtube.com/watch?v=${latestVideoDetails.resourceId.videoId}`,
       lastPublish: latestVideoDetails.publishedAt,
       message:
-        (latestVideoDetails.thumbnails.high &&
-          latestVideoDetails.thumbnails.high.url),
+        latestVideoDetails.thumbnails.high &&
+        latestVideoDetails.thumbnails.high.url,
     };
 
     // Exemplo de logs adicionais

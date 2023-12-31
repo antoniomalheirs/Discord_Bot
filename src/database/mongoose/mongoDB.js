@@ -1,7 +1,11 @@
 const DBWrapper = require("../DBWrapper");
 
 const mongoose = require("mongoose");
-const { GuildRepository, UserRepository, VideoRepository } = require("./repositories");
+const {
+  GuildRepository,
+  UserRepository,
+  VideoRepository,
+} = require("./repositories");
 
 module.exports = class MongoDB extends DBWrapper {
   constructor(options = {}) {

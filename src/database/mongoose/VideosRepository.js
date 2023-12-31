@@ -25,8 +25,6 @@ module.exports = class VideosRepository extends Repository {
       return null; // ou um objeto vazio, dependendo da preferência
     }
   }
-  
-  
 
   add(entity) {
     return this.model.create(entity).then(this.parse);
@@ -39,9 +37,7 @@ module.exports = class VideosRepository extends Repository {
 
   // Pesquisa por Data de Upoload
   findOne(lastVideo, projection) {
-    return this.model
-      .findOne({ lastVideo }, projection)
-      .then(this.parse);
+    return this.model.findOne({ lastVideo }, projection).then(this.parse);
   }
 
   get size() {

@@ -7,7 +7,7 @@ module.exports = class Command {
 
     this.name = options.name;
     this.aliases = options.aliases || [];
-    
+
     this.category = options.category || "Nenhuma";
     this.description = options.description || "Nenhuma";
     this.usage = options.usage || "Nenhuma";

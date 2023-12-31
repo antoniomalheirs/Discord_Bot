@@ -1,3 +1,3 @@
 module.exports = {
-    VideoSchema: require("./VideoSchema.js"),
-  };
+  VideoSchema: require("./VideoSchema.js"),
+};

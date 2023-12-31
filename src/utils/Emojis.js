@@ -1,5 +1,5 @@
 module.exports = {
   Error: "❌",
   Success: "✅",
-  Diamond: "🟣"
+  Diamond: "🟣",
 };
