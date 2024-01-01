@@ -4,10 +4,12 @@ module.exports = new Schema({
   youtube: {
     type: String,
     required: true,
-    unique: true,
   },
   channel: { type: String },
-  lastVideo: { type: String },
+  lastVideo: {
+    type: String,
+    unique: true,
+  },
   lastPublish: { type: String },
   message: { type: String },
 });

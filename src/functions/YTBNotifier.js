@@ -61,6 +61,10 @@ module.exports = async function s() {
               "** acabou de postar um novo vídeo!!! **Confira **" +
               link
           );
+          const separador =
+            "https://tenor.com/view/rainbow-color-line-colorful-change-color-gif-17422882";
+          canalEspecifico.send(separador);
+
           //canalEspecifico.send({ embeds: [embed.toJSON()] });
         }
       }
