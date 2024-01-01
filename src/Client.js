@@ -2,7 +2,6 @@ const { Client } = require("discord.js");
 const {
   EventLoader,
   DatabaseLoader,
-  CommandLoader,
   FunctionLoader,
   SlashLoader,
 } = require("./loaders");
@@ -21,8 +20,7 @@ module.exports = class DISCORDBOT extends Client {
 
   IniciarBOTFUNCOES() {
     new EventLoader(this).call(); // Carrega os Eventos
-    new DatabaseLoader(this).call(); // Carrega a  Database
-    new CommandLoader(this).call(); // Carrega os Comandos
+    new DatabaseLoader(this).call(); // Carrega a  Database // Carrega os Comandos
     new FunctionLoader(this).call();
     new SlashLoader(this).call();
 
