@@ -1,5 +1,4 @@
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
+const { REST, Routes } = require("discord.js");
 require("dotenv").config(); // Substitua pelo caminho do seu arquivo de configuração
 
 const commandsPath = "./src/slash/";
