@@ -7,7 +7,7 @@ module.exports = class FunctionLoader {
 
   async call() {
     try {
-      console.log("\x1b[1m\x1b[93m[FUNÇÕES]\x1b[1m", "Funções em Execução.");
+      console.log(`\x1b[1m\x1b[93m[FUNÕES]\x1b[0m`, `Funções em Execução.`);
       await this.loadFunctions("./src/functions");
     } catch (error) {
       console.error("Error loading functions:", error.message);
