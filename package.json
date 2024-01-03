@@ -1,8 +1,8 @@
 {
-  "name": "tutorial",
+  "name": "botdiscord",
   "version": "1.0.0",
   "description": "A simple Bot",
-  "main": "index.js",
+  "main": "Index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,8 +17,6 @@
     "mongoose": "^7.5.3",
     "node-fetch": "^3.3.2",
     "path": "^0.12.7",
-    "quick.db": "^9.1.7",
-    "rss-parser": "^3.13.0",
     "transform-props": "^1.0.1"
   }
 }

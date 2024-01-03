@@ -4,7 +4,16 @@ const TwitchID = require("../utils/GetTwitchId.js");
 
 const clientId = process.env.TWITCH_CLIENTID;
 const clientSecret = process.env.TWITCH_SECRETID;
-const channelNames = ["gaules", "yayahuz", "coelho"];
+const channelNames = [
+  "gaules",
+  "yayahuz",
+  "thedarkness",
+  "brksedu",
+  "sofiaespanha",
+  "zanfas_cenegal",
+  "yoda",
+  "smzinho",
+];
 
 async function isChannelLive(accessToken, channelId) {
   const response = await axios.get("https://api.twitch.tv/helix/streams", {

@@ -3,5 +3,5 @@ module.exports = {
   YTBWARN: require("./YTBWARN"),
   Token: require("./GetToken"),
   TwitchID: require("./GetTwitchId"),
-  //RegistradorComandos: require("../../RegistradorComandos"),
+  Emoji: require("./Emojis"),
 };
