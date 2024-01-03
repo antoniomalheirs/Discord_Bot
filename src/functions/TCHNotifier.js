@@ -21,37 +21,36 @@ async function isChannelLive(accessToken, channelId) {
 }
 
 module.exports = async function p() {
-  const accessToken = await Token.bind(this)(clientId, clientSecret);
+  try {
+    const accessToken = await Token(clientId, clientSecret);
 
-  const canalEspecifico = await this.client.channels.fetch(
-    process.env.CHANNEL_LOGS_TWITCH
-  );
+    const canalEspecifico = await this.client.channels.fetch(
+      process.env.CHANNEL_LOGS_TWITCH
+    );
 
-  for (const channelName of channelNames) {
-    try {
-      const channelId = await TwitchID.bind(this)(
-        accessToken,
-        channelName,
-        clientId
-      );
-      const isLive = await isChannelLive(accessToken, channelId);
+    for (const channelName of channelNames) {
+      try {
+        const channelId = await TwitchID(accessToken, channelName, clientId);
+        const isLive = await isChannelLive(accessToken, channelId);
 
-      if (isLive) {
-        const twitchLink = `https://www.twitch.tv/${channelName}`;
-        //console.log(`** ${channelName} ** está em live! Assista em: _** ${twitchLink} **_`);
+        if (isLive) {
+          const twitchLink = `https://www.twitch.tv/${channelName}`;
+          canalEspecifico.send(
+            `** ${channelName.toUpperCase()}** está em live! Confira em ${twitchLink}`
+          );
 
-        canalEspecifico.send(
-          `** ${channelName.toUpperCase()}** está em live! Confira em ${twitchLink}`
-        );
-        console.log(`${channelName} está em live.`);
+          console.log(
+            `${channelName.toUpperCase()}** está em live! Confira em ${twitchLink}`
+          );
+        }
+      } catch (error) {
+        console.error(`Erro para o canal ${channelName}: Nada encontrado`);
       }
-    } catch (error) {
-      console.error(
-        `Erro para o canal ${channelName}: ${error.message || error}`
-      );
     }
+  } catch (error) {
+    console.error(`Erro ao obter token Twitch: ${error.message || error}`);
   }
-  setInterval(() => p(), 2 * 60 * 60 * 1000);
-};
 
-// Configurar o intervalo apenas uma vez fora da função main
+  // Intervalo entre a re-chamada
+  setTimeout(() => p(), 2 * 60 * 60 * 1000);
+};

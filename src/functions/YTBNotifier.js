@@ -72,5 +72,8 @@ module.exports = async function s() {
       console.error("Erro ao chamar YTBWARN:", error);
     }
   }
+
+  
+  // Intervalo entre a re-chamada
   setInterval(() => s.bind(this)(), 2 * 60 * 60 * 1000);
 };
