@@ -40,6 +40,14 @@ module.exports = class VideosRepository extends Repository {
     return this.model.findOne({ lastVideo }, projection).then(this.parse);
   }
 
+  findByChannel(channel, projection) {
+    return this.model.findOne({ channel }, projection).then(this.parse);
+  }
+
+  getAllUniqueYoutubeAttributes() {
+    return this.model.distinct("youtube").exec();
+  }
+
   get size() {
     return this.model.find({}).then((e) => e.length);
   }

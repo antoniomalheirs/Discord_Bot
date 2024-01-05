@@ -3,19 +3,17 @@ const mongoose = require("mongoose");
 const YTBWARN = require("../utils/YTBWARN.js");
 const PesquisaYTBVideo = require("./PesquisaYTBVideo.js");
 const RegistradorYTBVideo = require("./RegistradorYTBVideo.js");
+const VideosRepository = require("../database/mongoose/VideosRepository.js");
 const VideoSchema = require("../database/schemas/VideoSchema.js");
 mongoose.model("Videos", VideoSchema);
+const videoRepository = new VideosRepository(mongoose, "Videos");
 
 module.exports = async function s() {
-  const channelsId = [
-    "UCt16NSYjauKclK67LCXvQyA",
-    "UC8hU4ttIQnmmxywv9qrRfqw",
-    "UCFPWJA3H5uEtlR32IUbnjAg",
-    "UCOVzRGlVSRUb0ItTmTXLKaw",
-    "UCq84Cr94cQ2RIFjyyBOdy3Q",
-    "UCSZwSipmufiBGjFk9q3rD-A",
-  ];
-  client = this.client;
+  const allYoutubeAttributes =
+    await videoRepository.getAllUniqueYoutubeAttributes();
+
+  const channelsId = allYoutubeAttributes;
+  //client = this.client;
 
   for (const channelId of channelsId) {
     const newVideo = {
@@ -72,8 +70,6 @@ module.exports = async function s() {
       console.error("Erro ao chamar YTBWARN:", error);
     }
   }
-
-  
   // Intervalo entre a re-chamada
-  setInterval(() => s.bind(this)(), 2 * 60 * 60 * 1000);
+  setInterval(() => s.bind(this)(), 4 * 60 * 60 * 1000);
 };
