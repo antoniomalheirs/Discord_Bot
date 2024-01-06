@@ -1,5 +1,5 @@
 const { REST, Routes } = require("discord.js");
-require("dotenv").config(); // Substitua pelo caminho do seu arquivo de configuração
+require("dotenv").config();
 
 const commandsPath = "./src/slash/";
 const commandFiles = require("fs")
@@ -18,7 +18,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
   try {
     console.log("Started refreshing application (/) commands.");
 
-    await rest.put(
+    const response = await rest.put(
       Routes.applicationGuildCommands(
         process.env.CLIENT_ID,
         process.env.GUILD_ID
@@ -29,6 +29,13 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
     );
 
     console.log("Successfully reloaded application (/) commands.");
+
+    // Imprima os IDs e nomes dos comandos
+    const commandInfo = response.map((command) => ({
+      id: command.id,
+      name: command.name,
+    }));
+    console.log("Command IDs and Names:", commandInfo);
   } catch (error) {
     console.error(error);
   }

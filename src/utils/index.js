@@ -1,8 +1,8 @@
 module.exports = {
   FileUtils: require("./FileUtils"),
   YTBWARN: require("./YTBWARN"),
-  CHANNELTOID: require("./CHANNELTOID"),
-  Token: require("./GetToken"),
-  TwitchID: require("./GetTwitchId"),
+  YTBCHANNELTOID: require("./YTBCHANNELTOID"),
+  TwitchToken: require("./TwitchToken"),
+  TwitchID: require("./TwitchID"),
   Emoji: require("./Emojis"),
 };

@@ -5,8 +5,8 @@ const PesquisaYTBVideo = require("./PesquisaYTBVideo.js");
 const RegistradorYTBVideo = require("./RegistradorYTBVideo.js");
 const VideosRepository = require("../database/mongoose/VideosRepository.js");
 const VideoSchema = require("../database/schemas/VideoSchema.js");
-mongoose.model("Videos", VideoSchema);
 const videoRepository = new VideosRepository(mongoose, "Videos");
+mongoose.model("Videos", VideoSchema);
 
 module.exports = async function s() {
   const allYoutubeAttributes =
@@ -71,5 +71,5 @@ module.exports = async function s() {
     }
   }
   // Intervalo entre a re-chamada
-  setInterval(() => s.bind(this)(), 4 * 60 * 60 * 1000);
+  setInterval(() => s(this), 4 * 60 * 60 * 1000);
 };

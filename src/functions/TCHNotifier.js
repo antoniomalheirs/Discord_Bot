@@ -1,6 +1,6 @@
 const axios = require("axios");
-const Token = require("../utils/GetToken.js");
-const TwitchID = require("../utils/GetTwitchId.js");
+const TwitchToken = require("../utils/TwitchToken.js");
+const TwitchID = require("../utils/TwitchID.js");
 
 const clientId = process.env.TWITCH_CLIENTID;
 const clientSecret = process.env.TWITCH_SECRETID;
@@ -31,10 +31,10 @@ async function isChannelLive(accessToken, channelId) {
 
 module.exports = async function p() {
   try {
-    const accessToken = await Token(clientId, clientSecret);
+    const accessToken = await TwitchToken(clientId, clientSecret);
 
     const canalEspecifico = await this.client.channels.fetch(
-      process.env.CHANNEL_LOGS_TWITCH
+      process.env.CHANNEL_TWITCH
     );
 
     for (const channelName of channelNames) {
@@ -51,6 +51,10 @@ module.exports = async function p() {
           console.log(
             `${channelName.toUpperCase()}** está em live! Confira em ${twitchLink}`
           );
+
+          const separador =
+            "https://tenor.com/view/rainbow-color-line-colorful-change-color-gif-17422882";
+          canalEspecifico.send(separador);
         }
       } catch (error) {
         console.error(`Erro para o canal ${channelName}: Nada encontrado`);
