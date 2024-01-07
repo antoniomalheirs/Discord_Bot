@@ -71,5 +71,5 @@ module.exports = async function s() {
     }
   }
   // Intervalo entre a re-chamada
-  setInterval(() => s(this), 4 * 60 * 60 * 1000);
+  setTimeout(() => s.call(this), 2 * 60 * 60 * 1000);
 };

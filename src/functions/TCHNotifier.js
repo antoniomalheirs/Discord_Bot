@@ -63,7 +63,6 @@ module.exports = async function p() {
   } catch (error) {
     console.error(`Erro ao obter token Twitch: ${error.message || error}`);
   }
-
   // Intervalo entre a re-chamada
-  setTimeout(() => p(), 2 * 60 * 60 * 1000);
+  setTimeout(() => p.call(this), 2 * 60 * 60 * 1000);
 };

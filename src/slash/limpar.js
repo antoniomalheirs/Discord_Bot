@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require("discord.js");
+const discordBot = require("../Client"); // Certifique-se de importar corretamente o objeto discordBot
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("limpa")
     .setDescription("Limpa o canal em que o comando foi inserido")
-    .addIntegerOption(option =>
+    .addIntegerOption((option) =>
       option
         .setName("quant")
         .setDescription("Número de mensagens a serem excluídas")
@@ -13,8 +14,13 @@ module.exports = {
 
   async execute(interaction) {
     try {
-      // Obtém o canal em que o comando foi inserido
-      const canalAtual = interaction.channel;
+      // Obtém o ID do canal em que o comando foi inserido
+      const canalAtualID = interaction.channelId;
+      //console.log(canalAtualID);
+
+      // Verifica se o canal é válido
+      const canalAtual = await discordBot.channels.fetch(canalAtualID);
+      
 
       // Obtém o número de mensagens a serem excluídas do parâmetro
       const quantidade = interaction.options.getInteger("quant");

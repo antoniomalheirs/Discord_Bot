@@ -1,11 +1,22 @@
 require("dotenv").config();
+const discordBot = require("./src/Client");
 
-const Client = require("./src/Client");
-const client = new Client();
+(async () => {
+  try {
+    await discordBot.start();
+  } catch (error) {
+    console.error("Erro ao iniciar o bot:", error);
+  }
+})();
 
-client.IniciarBOTFUNCOES().login();
+// Tratamento de exceções não capturadas
+process.on("uncaughtException", (err) => {
+  console.error("Exceção não capturada:", err);
+  process.exit(1);
+});
 
-process
-  .on("uncaughtException", (err) => console.log(err))
-
-  .on("unhandledRejection", (err) => console.log(err));
+// Tratamento de rejeições não tratadas
+process.on("unhandledRejection", (err) => {
+  console.error("Rejeição não tratada:", err);
+  process.exit(1);
+});

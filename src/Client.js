@@ -1,4 +1,6 @@
-const { Client } = require("discord.js");
+// Client.js
+
+const { Client, Collection } = require("discord.js");
 const {
   EventLoader,
   DatabaseLoader,
@@ -6,24 +8,38 @@ const {
   SlashLoader,
 } = require("./loaders");
 
-module.exports = class DISCORDBOT extends Client {
+class DiscordBot extends Client {
   constructor() {
     super({
       intents: 8,
       failIfNotExists: false,
     });
+
+    this.commands = new Collection();
   }
 
-  login() {
-    super.login(process.env.TOKEN);
+  async start() {
+    await new EventLoader(this).call(); // Carrega os Eventos
+    await new DatabaseLoader(this).call(); // Carrega a Database
+    await new FunctionLoader(this).call();
+    const commands = await new SlashLoader(this).call(); // Carrega os comandos
+    this.setCommands(commands);
+
+    // Adicione outros inicializadores aqui, se necessário
+
+    console.log("Bot está pronto para ser iniciado!");
+    this.login(process.env.TOKEN);
   }
 
-  IniciarBOTFUNCOES() {
-    new EventLoader(this).call(); // Carrega os Eventos
-    new DatabaseLoader(this).call(); // Carrega a  Database // Carrega os Comandos
-    new FunctionLoader(this).call();
-    new SlashLoader(this).call();
-
-    return this;
+  setCommands(commands) {
+    this.commands = commands;
   }
-};
+
+  getCommands() {
+    return this.commands;
+  }
+}
+
+const discordBot = new DiscordBot();
+
+module.exports = discordBot;

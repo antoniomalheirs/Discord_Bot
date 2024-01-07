@@ -1,27 +1,32 @@
+const discordBot = require("../Client");
+
 module.exports = async function b() {
-  try {
-    const canalEspecifico = await this.client.channels.fetch(
-      process.env.CHANNEL_TWITCH
-    );
-
+  // Função para realizar a limpeza
+  const limparCanal = async () => {
     try {
-      const messages = await canalEspecifico.messages.fetch({ limit: 100 });
+      const canalEspecifico = await discordBot.channels.fetch(
+        process.env.CHANNEL_TWITCH
+      );
 
-      if (messages.size > 1) {
-        await canalEspecifico.bulkDelete(messages); // Corrigido aqui
-        await canalEspecifico.send("Limpando lives de ontem!"); // Corrigido aqui
+      try {
+        const messages = await canalEspecifico.messages.fetch({ limit: 100 });
+
+        if (messages.size > 1) {
+          await canalEspecifico.bulkDelete(messages);
+          await canalEspecifico.send("Limpando lives de ontem!");
+        }
+      } catch (error) {
+        console.log(
+          `\x1b[1m\x1b[90m[Limpeza De Canais]\x1b[0m`,
+          `Limpeza em Execução, na próxima execução iremos limpa-las.`
+        );
       }
     } catch (error) {
-      console.log(
-        `\x1b[1m\x1b[90m[Limpeza De Canais]\x1b[0m`,
-        `Limpeza em Execução, na proxima execução iremos limpa-las.`
-      );
+      //console.error("Canal não encontrado.!.!.!", error);
     }
-    // Verifica se há mensagens para excluir
-  } catch (error) {
-    console.error("Canal não encontrado.!.!.!", error);
-  }
+    setTimeout(() => limparCanal.call(discordBot), 24 * 60 * 60 * 1000);
+  };
 
-  // Configura o próximo intervalo
-  setTimeout(() => b.call(this), 24 * 60 * 60 * 1000); // Corrigido aqui
+
+  limparCanal();
 };
