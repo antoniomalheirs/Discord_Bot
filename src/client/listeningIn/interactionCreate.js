@@ -12,7 +12,9 @@ module.exports = {
     const command = commands.get(interaction.commandName);
 
     if (!command) {
-      console.error(`Não existe nenhum comando com nome de: ${interaction.commandName}`);
+      console.error(
+        `Não existe nenhum comando com nome de: ${interaction.commandName}`
+      );
       return;
     }
 
