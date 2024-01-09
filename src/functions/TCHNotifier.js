@@ -1,6 +1,7 @@
 const axios = require("axios");
 const TwitchToken = require("../utils/TwitchToken.js");
 const TwitchID = require("../utils/TwitchID.js");
+const discordBot = require("../Client");
 
 const clientId = process.env.TWITCH_CLIENTID;
 const clientSecret = process.env.TWITCH_SECRETID;
@@ -33,7 +34,7 @@ module.exports = async function p() {
   try {
     const accessToken = await TwitchToken(clientId, clientSecret);
 
-    const canalEspecifico = await this.client.channels.fetch(
+    const canalEspecifico = await discordBot.channels.fetch(
       process.env.CHANNEL_TWITCH
     );
 
@@ -64,5 +65,5 @@ module.exports = async function p() {
     console.error(`Erro ao obter token Twitch: ${error.message || error}`);
   }
   // Intervalo entre a re-chamada
-  setTimeout(() => p.call(this), 2 * 60 * 60 * 1000);
+  setTimeout(() => p.call(discordBot), 2 * 60 * 60 * 1000);
 };

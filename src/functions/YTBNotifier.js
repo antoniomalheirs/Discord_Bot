@@ -7,6 +7,7 @@ const VideosRepository = require("../database/mongoose/VideosRepository.js");
 const VideoSchema = require("../database/schemas/VideoSchema.js");
 const videoRepository = new VideosRepository(mongoose, "Videos");
 mongoose.model("Videos", VideoSchema);
+const discordBot = require("../Client");
 
 module.exports = async function s() {
   const allYoutubeAttributes =
@@ -49,7 +50,7 @@ module.exports = async function s() {
             .setColor("#3498db"); // Cor da Embed (opcional)
 
           // Enviar a Embed no canal específico (substitua 'ID_DO_CANAL' pelo ID real do canal)
-          let canalEspecifico = await this.client.channels.fetch(
+          let canalEspecifico = await discordBot.channels.fetch(
             process.env.CHANNEL_LOGS
           );
 
@@ -71,5 +72,5 @@ module.exports = async function s() {
     }
   }
   // Intervalo entre a re-chamada
-  setTimeout(() => s.call(this), 2 * 60 * 60 * 1000);
+  setTimeout(() => s.call(discordBot), 2 * 60 * 60 * 1000);
 };

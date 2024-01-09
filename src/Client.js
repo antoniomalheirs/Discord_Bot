@@ -1,6 +1,4 @@
-// Client.js
-
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const {
   EventLoader,
   DatabaseLoader,
@@ -13,6 +11,13 @@ class DiscordBot extends Client {
     super({
       intents: 8,
       failIfNotExists: false,
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildVoiceStates,
+      ],
     });
 
     this.commands = new Collection();

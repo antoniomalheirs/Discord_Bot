@@ -12,23 +12,23 @@ module.exports = {
     const command = commands.get(interaction.commandName);
 
     if (!command) {
-      console.error(`No command matching ${interaction.commandName} was found.`);
+      console.error(`Não existe nenhum comando com nome de: ${interaction.commandName}`);
       return;
     }
 
     try {
-      console.log(`Executing command: ${command.data.name}`);
+      console.log(`Executando comando: ${command.data.name}`);
       await command.execute(interaction);
     } catch (error) {
       console.error(error);
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({
-          content: "There was an error while executing this command!",
+          content: "Erro ao executar comando",
           ephemeral: true,
         });
       } else {
         await interaction.reply({
-          content: "There was an error while executing this command!",
+          content: "Erro ao executar comando",
           ephemeral: true,
         });
       }
