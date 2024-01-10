@@ -1,5 +1,7 @@
 const { Schema } = require("mongoose");
 
 module.exports = new Schema({
-  _id: { type: String },
+  guildID: { type: String },
+  guildName: { type: String },
+  
 });

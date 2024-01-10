@@ -16,7 +16,7 @@ module.exports = {
   },
 };
 
-// Função para incrementar o total de mensagens do usuário no UserMongoRepository
+// Função para incrementar o total de mensagens do usuário no UsersRepository
 async function updateUserMessageCount(userId) {
   try {
     const userRepo = new UsersRepository(mongoose, "Users");
