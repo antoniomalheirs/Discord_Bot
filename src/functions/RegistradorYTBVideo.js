@@ -16,7 +16,8 @@ module.exports = async function (channel) {
         channel: channel.channel,
         lastVideo: channel.lastVideo,
         lastPublish: channel.lastPublish,
-        message: channel.message, // Substitua isso com os dados reais do vídeo
+        message: channel.message,
+        notifyGuild: channel.notifyGuild, // Substitua isso com os dados reais do vídeo
         // ... outros campos do vídeo
       };
 

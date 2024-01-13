@@ -33,6 +33,7 @@ module.exports = async function s() {
         const resultf = await PesquisaYTBVideo.bind(this)(result);
         console.log(resultf);
         if (!resultf) {
+          result.notifyGuild = this.guild?.id;
           await RegistradorYTBVideo.bind(this)(result);
 
           const [titulo, link] = result.lastVideo.split(" || ");

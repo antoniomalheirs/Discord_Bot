@@ -92,6 +92,7 @@ module.exports = async function (channelName) {
       youtube: channelId,
       channel: channelData.items[0].snippet.title,
       lastVideo: `${latestVideoDetails.title} || https://www.youtube.com/watch?v=${latestVideoDetails.resourceId.videoId}`,
+      notifyGuild: "",
       // ... outros campos do canal
     };
   } catch (error) {

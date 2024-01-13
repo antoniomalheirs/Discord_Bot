@@ -34,9 +34,11 @@ module.exports = {
         lastVideo: 1,
         lastPublish: 1,
         message: 1,
+        notifyGuild: 1,
       };
 
       const noBanco = await videoRepository.findByChannel(videoId, projection);
+      const guildId = interaction.guild?.id;
 
       if (noBanco != null) {
         return interaction.reply(
@@ -45,6 +47,7 @@ module.exports = {
       } else {
         const result = await YTBCHANNELTOID.bind(this)(videoId);
         console.log(result);
+        result.notifyGuild = guildId;
         await RegistradorYTBVideo.bind(this)(result);
         return interaction.reply(
           `O canal ${result.channel} foi listado. Fica suave, vamos tocar no radin quando sair videozao novo!`

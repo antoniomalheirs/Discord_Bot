@@ -13,10 +13,11 @@ module.exports = {
     try {
       // Verifica se o usuário entrou ou saiu de um canal de voz
       const server = oldState.guild.id;
-      
+      const name = newState.member.displayName || newState.member.user.username;
+
       if (oldState.channelId !== newState.channelId) {
         // Atualiza o tempo em chamadas para o usuário que saiu
-        await updateVoiceTime(oldState.member.id, server);
+        await updateVoiceTime(oldState.member.id, server, name);
       }
 
       // Verifica se o usuário entrou em um canal de voz
@@ -31,7 +32,7 @@ module.exports = {
 };
 
 // Função para atualizar o tempo em chamadas do usuário no UserMongoRepository
-async function updateVoiceTime(userId, server) {
+async function updateVoiceTime(userId, server, name) {
   try {
     const userRepo = new UsersRepository(mongoose, "Users");
 
@@ -50,7 +51,11 @@ async function updateVoiceTime(userId, server) {
       user.voiceTime = (user.voiceTime || 0) + timeInMinutes;
 
       // Atualiza as informações do usuário no banco de dados
-      await userRepo.update(userId, { voiceTime: user.voiceTime, idguild: server });
+      await userRepo.update(userId, {
+        voiceTime: user.voiceTime,
+        idguild: server,
+        username: name,
+      });
 
       // Remove o usuário da lista de usuários ativos
       activeVoiceUsers.delete(userId);
