@@ -5,6 +5,7 @@ const {
   GuildRepository,
   UserRepository,
   VideoRepository,
+  UserAPIRepository,
 } = require("./repositories");
 
 module.exports = class MongoDB extends DBWrapper {
@@ -23,6 +24,7 @@ module.exports = class MongoDB extends DBWrapper {
       this.guilds = new GuildRepository(m);
       this.users = new UserRepository(m);
       this.videos = new VideoRepository(m);
+      this.APIUsers = new UserAPIRepository(m);
     });
   }
 };

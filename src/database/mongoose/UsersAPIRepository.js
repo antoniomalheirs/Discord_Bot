@@ -16,9 +16,6 @@ module.exports = class UserRepository extends Repository {
       return {
         codigouser: entity.codigouser ? String(entity.codigouser) : null,
         username: entity.username,
-        voiceTime: entity.voiceTime || 0,
-        totalMessages: entity.totalMessages || 0,
-        idguild: entity.idguild || "nada encontrado"
         // ... outros campos do usuário
       };
     } else {

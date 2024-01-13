@@ -4,6 +4,7 @@ const UsersRepository = require("../../database/mongoose/UsersRepository");
 const UserSchema = require("../../database/schemas/UserSchema");
 mongoose.model("Users", UserSchema);
 
+
 module.exports = {
   name: Events.MessageCreate,
   async execute(message) {
@@ -11,13 +12,17 @@ module.exports = {
     if (message.author.bot) {
       return;
     }
+
+    const server = message.guild.id;
+
     // Incrementa o total de mensagens do usuário
-    await updateUserMessageCount(message.author.id);
+    await updateUserMessageCount(message.author.id,server);
+    
   },
 };
 
 // Função para incrementar o total de mensagens do usuário no UsersRepository
-async function updateUserMessageCount(userId) {
+async function updateUserMessageCount(userId, server) {
   try {
     const userRepo = new UsersRepository(mongoose, "Users");
     // Obtém as informações do usuário do banco de dados
@@ -27,7 +32,7 @@ async function updateUserMessageCount(userId) {
     user.totalMessages = (user.totalMessages || 0) + 1;
 
     // Atualiza as informações do usuário no banco de dados
-    await userRepo.update(userId, { totalMessages: user.totalMessages });
+    await userRepo.update(userId, { totalMessages: user.totalMessages, idguild: server });
   } catch (error) {
     console.error("Erro ao atualizar o total de mensagens do usuário:", error);
   }
