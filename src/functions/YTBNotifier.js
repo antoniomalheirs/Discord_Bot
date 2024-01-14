@@ -12,7 +12,7 @@ const discordBot = require("../Client");
 module.exports = async function s() {
   const allYoutubeAttributes =
     await videoRepository.getAllUniqueYoutubeAttributes();
-
+  
   const channelsId = allYoutubeAttributes;
   //client = this.client;
 
@@ -22,7 +22,8 @@ module.exports = async function s() {
       channel: null,
       lastVideo: null,
       lastPublish: null,
-      message: null, // Substitua isso com os dados reais do vídeo
+      message: null,
+      notifyGuild: null, // Substitua isso com os dados reais do vídeo
       // ... outros campos do vídeo
     };
 
@@ -32,8 +33,8 @@ module.exports = async function s() {
       if (result.lastVideo != null) {
         const resultf = await PesquisaYTBVideo.bind(this)(result);
         console.log(resultf);
+
         if (!resultf) {
-          result.notifyGuild = this.guild?.id;
           await RegistradorYTBVideo.bind(this)(result);
 
           const [titulo, link] = result.lastVideo.split(" || ");

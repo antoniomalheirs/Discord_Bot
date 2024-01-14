@@ -13,7 +13,7 @@ module.exports = {
     try {
       // Verifica se o usuário entrou ou saiu de um canal de voz
       const server = oldState.guild.id;
-      const name = newState.member.displayName || newState.member.user.username;
+      const name = newState.member.user.username;
 
       if (oldState.channelId !== newState.channelId) {
         // Atualiza o tempo em chamadas para o usuário que saiu
@@ -31,12 +31,36 @@ module.exports = {
   },
 };
 
-// Função para atualizar o tempo em chamadas do usuário no UserMongoRepository
+// Função para atualizar o tempo em chamadas do usuário no UsersRepository
 async function updateVoiceTime(userId, server, name) {
   try {
     const userRepo = new UsersRepository(mongoose, "Users");
 
-    // Verifica se o usuário estava ativo em uma chamada de voz
+    // Obtém as informações do usuário do banco de dados
+    const user = await userRepo.getByUserIdAndGuildId(userId, server);
+
+    if (user.idguild !== server) {
+      const usersInGuild = await userRepo.findByGuildId(server);
+
+      if (!usersInGuild) {
+        // Se o usuário não existir no banco de dados, cria um novo registro
+        const newUser = {
+          codigouser: userId,
+          idguild: server,
+          username: name,
+          voiceTime: 0, // Inicia com zero minutos
+          // ... outros campos do usuário
+        };
+
+        await userRepo.add(newUser);
+        console.log("Usuário não existente. Novo documento criado.");
+        return;
+      }
+      console.log("Usuário fora da guilda. Não será registrada.");
+      return;
+    }
+
+    // Se o usuário já existir, incrementa o tempo em chamadas
     if (activeVoiceUsers.has(userId)) {
       const entryTime = activeVoiceUsers.get(userId);
       const currentTime = Date.now();
@@ -44,14 +68,10 @@ async function updateVoiceTime(userId, server, name) {
       // Calcula o tempo em minutos
       const timeInMinutes = Math.floor((currentTime - entryTime) / (1000 * 60));
 
-      // Obtém as informações do usuário do banco de dados
-      const user = await userRepo.get(userId);
-
-      // Incrementa o tempo em chamadas
       user.voiceTime = (user.voiceTime || 0) + timeInMinutes;
 
       // Atualiza as informações do usuário no banco de dados
-      await userRepo.update(userId, {
+      await userRepo.updateByUserIdAndGuildId(userId, server, {
         voiceTime: user.voiceTime,
         idguild: server,
         username: name,

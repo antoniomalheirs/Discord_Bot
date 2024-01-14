@@ -74,6 +74,7 @@ module.exports = async function (channelId) {
       message:
         latestVideoDetails.thumbnails.high &&
         latestVideoDetails.thumbnails.high.url,
+      notifyGuild: "",
     };
 
     // Exemplo de logs adicionais

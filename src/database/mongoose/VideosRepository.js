@@ -67,6 +67,10 @@ module.exports = class VideosRepository extends Repository {
     return this.model.updateOne({ youtube: id }, entity, options);
   }
 
+  updateByYoutubeId(youtubeId, updateData, options = { new: true }) {
+    return this.model.findOneAndUpdate({ youtube: youtubeId }, updateData, options).then(this.parse);
+  }
+
   async verify(id) {
     return (await this.model.findOne({ youtube: id }).then((e) => {
       return e;

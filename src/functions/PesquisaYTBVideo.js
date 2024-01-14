@@ -16,6 +16,7 @@ module.exports = async function (channel) {
       lastVideo: 1,
       lastPublish: 1,
       message: 1,
+      notifyGuild: 1,
     }; // Substitua pelos campos desejados
 
     const result = await videoRepository.findOne(videoId, projection);
