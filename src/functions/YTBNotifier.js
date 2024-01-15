@@ -18,16 +18,17 @@ module.exports = async function s() {
   try {
     // Busque todas as guildas com YOUTUBENOTIFY definido como true
     const guildasComNotify = await guildRepository.verifyYouTubeNotify();
-    
+
     // Para cada guilda, execute a lógica principal
     for (const guilda of guildasComNotify) {
       const guildId = guilda.guildID;
+      const channelsend = guilda.channelytb;
 
       const allYoutubeAttributes =
         await videoRepository.getChannelsWithVideosByGuildId(guildId);
 
       const channelsId = allYoutubeAttributes;
-      //console.log(channelsId);
+      console.log(guilda);
       for (const channelId of channelsId) {
         const newVideo = {
           youtube: channelId.youtube,
@@ -38,14 +39,14 @@ module.exports = async function s() {
           notifyGuild: guildId,
           // ... outros campos do vídeo
         };
-        console.log(newVideo);
+        //console.log(newVideo);
         try {
           const result = await YTBWARN.bind(this)(newVideo.youtube);
 
           if (result.lastVideo != null) {
             const resultf = await PesquisaYTBVideo.bind(this)(result);
             console.log(resultf);
-
+            result.notifyGuild = guildId;
             if (resultf) {
               await RegistradorYTBVideo.bind(this)(result);
 
@@ -63,7 +64,7 @@ module.exports = async function s() {
                 .setColor("#3498db");
 
               let canalEspecifico = await discordBot.channels.fetch(
-                process.env.CHANNEL_LOGS
+                channelsend
               );
 
               canalEspecifico.send(

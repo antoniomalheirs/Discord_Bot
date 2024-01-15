@@ -16,7 +16,7 @@ module.exports = {
       const projection = {
         guildID: guild.id,
         guildName: guild.name,
-        youtubenotify: 1,
+        youtubenotify: 0,
       };
 
       if (await guildRepo.findOne(guild.id, projection)) {

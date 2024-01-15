@@ -25,8 +25,8 @@ module.exports = async function (channel) {
 
     if (result != null) {
       return result; // Retorna o vídeo quando existe
-    } else {
-      return false; // Retorna false quando não existe
+    }else {
+      return false; // Canal é nulo, consideramos que o vídeo não existe
     }
   } else {
     return false; // Canal é nulo, consideramos que o vídeo não existe

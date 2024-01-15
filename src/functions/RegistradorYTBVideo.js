@@ -10,7 +10,10 @@ module.exports = async function addOrUpdateVideo(channel) {
   if (channel != null) {
     try {
       // Verificar se o vídeo já existe no banco de dados
-      const videoExists = await videoRepository.verifyByYoutubeAndGuildId(channel.youtube, channel.notifyGuild);
+      const videoExists = await videoRepository.verifyByYoutubeAndGuildId(
+        channel.youtube,
+        channel.notifyGuild
+      );
 
       if (videoExists) {
         // Se o vídeo existir, atualize os dados
@@ -23,24 +26,34 @@ module.exports = async function addOrUpdateVideo(channel) {
           // ... outros campos do vídeo
         };
 
-        const updatedVideo = await videoRepository.updateByYoutubeIdAndGuildId(channel.youtube,channel.notifyGuild, updateData);
+        const updatedVideo = await videoRepository.updateByYoutubeIdAndGuildId(
+          channel.youtube,
+          channel.notifyGuild,
+          updateData
+        );
 
         console.log("Vídeo atualizado com sucesso:", updatedVideo);
       } else {
-        // Se o vídeo não existir, adicione-o ao banco de dados
-        const newVideo = {
-          youtube: channel.youtube,
-          channel: channel.channel,
-          lastVideo: channel.lastVideo,
-          lastPublish: channel.lastPublish,
-          message: channel.message,
-          notifyGuild: channel.notifyGuild,
-          // ... outros campos do vídeo
-        };
+        const videoExists = await videoRepository.verifyByYoutubeAndGuildId(
+          channel.youtube,
+          channel.notifyGuild
+        );
 
-        const addedVideo = await videoRepository.add(newVideo);
+        if (!videoExists) {
+          // Se o vídeo não existir, adicione-o ao banco de dados
+          const newVideo = {
+            youtube: channel.youtube,
+            channel: channel.channel,
+            lastVideo: channel.lastVideo,
+            lastPublish: channel.lastPublish,
+            message: channel.message,
+            notifyGuild: channel.notifyGuild,
+            // ... outros campos do vídeo
+          };
+          const addedVideo = await videoRepository.add(newVideo);
 
-        console.log("Vídeo adicionado com sucesso:", addedVideo);
+          console.log("Vídeo adicionado com sucesso:", addedVideo);
+        }
       }
     } catch (error) {
       console.error("Erro ao adicionar/atualizar vídeo:", error.message);

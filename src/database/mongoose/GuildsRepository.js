@@ -36,8 +36,12 @@ module.exports = class GuildRepository extends Repository {
     const conditions = { ...query, youtubenotify: true };
     console.log("Condições de Filtragem:", conditions); // Adicione esta linha
     const guildas = await this.model.find(conditions);
-  
-    return guildas.map(this.parse);
+
+    return guildas.map((guild) => ({
+      youtubenotify: guild.youtubenotify,
+      channelytb: guild.channelytb,
+      guildID: guild.guildID, // Modificado para refletir o nome correto da propriedade
+    }));
   }
 
   findByGuildName(guildName, projection) {
@@ -54,7 +58,7 @@ module.exports = class GuildRepository extends Repository {
     if (existingGuild) {
       return existingGuild;
     } else {
-      const newGuild = {guildID, projection};
+      const newGuild = { guildID, projection };
       return this.add(newGuild);
     }
   }

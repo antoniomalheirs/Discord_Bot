@@ -8,7 +8,6 @@ module.exports = new Schema({
   channel: { type: String },
   lastVideo: {
     type: String,
-    unique: true,
   },
   lastPublish: { type: String },
   message: { type: String },
