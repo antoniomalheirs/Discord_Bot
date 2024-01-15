@@ -31,6 +31,15 @@ module.exports = class GuildRepository extends Repository {
     return this.model.findOne({ guildID }, projection).then(this.parse);
   }
 
+  async verifyYouTubeNotify(query = {}) {
+    // Adiciona a condição de que YOUTUBENOTIFY deve ser verdadeiro
+    const conditions = { ...query, youtubenotify: true };
+    console.log("Condições de Filtragem:", conditions); // Adicione esta linha
+    const guildas = await this.model.find(conditions);
+  
+    return guildas.map(this.parse);
+  }
+
   findByGuildName(guildName, projection) {
     return this.model.findOne({ guildName }, projection).then(this.parse);
   }

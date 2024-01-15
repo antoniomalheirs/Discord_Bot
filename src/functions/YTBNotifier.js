@@ -6,73 +6,86 @@ const RegistradorYTBVideo = require("./RegistradorYTBVideo.js");
 const VideosRepository = require("../database/mongoose/VideosRepository.js");
 const VideoSchema = require("../database/schemas/VideoSchema.js");
 const videoRepository = new VideosRepository(mongoose, "Videos");
-mongoose.model("Videos", VideoSchema);
+const GuildsRepository = require("../database/mongoose/GuildsRepository.js");
+const GuildSchema = require("../database/schemas/GuildSchema.js");
+const guildRepository = new GuildsRepository(mongoose, "Guilds");
 const discordBot = require("../Client");
 
+mongoose.model("Videos", VideoSchema);
+mongoose.model("Guilds", GuildSchema);
+
 module.exports = async function s() {
-  const allYoutubeAttributes =
-    await videoRepository.getAllUniqueYoutubeAttributes();
-  
-  const channelsId = allYoutubeAttributes;
-  //client = this.client;
+  try {
+    // Busque todas as guildas com YOUTUBENOTIFY definido como true
+    const guildasComNotify = await guildRepository.verifyYouTubeNotify();
+    
+    // Para cada guilda, execute a lógica principal
+    for (const guilda of guildasComNotify) {
+      const guildId = guilda.guildID;
 
-  for (const channelId of channelsId) {
-    const newVideo = {
-      youtube: channelId,
-      channel: null,
-      lastVideo: null,
-      lastPublish: null,
-      message: null,
-      notifyGuild: null, // Substitua isso com os dados reais do vídeo
-      // ... outros campos do vídeo
-    };
+      const allYoutubeAttributes =
+        await videoRepository.getChannelsWithVideosByGuildId(guildId);
 
-    try {
-      const result = await YTBWARN.bind(this)(newVideo.youtube);
+      const channelsId = allYoutubeAttributes;
+      //console.log(channelsId);
+      for (const channelId of channelsId) {
+        const newVideo = {
+          youtube: channelId.youtube,
+          channel: null,
+          lastVideo: channelId.lastVideo,
+          lastPublish: null,
+          message: null,
+          notifyGuild: guildId,
+          // ... outros campos do vídeo
+        };
+        console.log(newVideo);
+        try {
+          const result = await YTBWARN.bind(this)(newVideo.youtube);
 
-      if (result.lastVideo != null) {
-        const resultf = await PesquisaYTBVideo.bind(this)(result);
-        console.log(resultf);
+          if (result.lastVideo != null) {
+            const resultf = await PesquisaYTBVideo.bind(this)(result);
+            console.log(resultf);
 
-        if (!resultf) {
-          await RegistradorYTBVideo.bind(this)(result);
+            if (resultf) {
+              await RegistradorYTBVideo.bind(this)(result);
 
-          const [titulo, link] = result.lastVideo.split(" || ");
+              const [titulo, link] = result.lastVideo.split(" || ");
 
-          // Construir uma Embed com informações do vídeo usando EmbedBuilder
-          const embed = new EmbedBuilder()
-            .setTitle(
-              "**" +
-                result.channel +
-                "** acabou de postar um novo vídeo!!! **Confira **" +
-                link
-            )
-            .setThumbnail(result.message)
-            .setURL(link) // Correção aqui
-            .setColor("#3498db"); // Cor da Embed (opcional)
+              const embed = new EmbedBuilder()
+                .setTitle(
+                  "**" +
+                    result.channel +
+                    "** acabou de postar um novo vídeo!!! **Confira **" +
+                    link
+                )
+                .setThumbnail(result.message)
+                .setURL(link)
+                .setColor("#3498db");
 
-          // Enviar a Embed no canal específico (substitua 'ID_DO_CANAL' pelo ID real do canal)
-          let canalEspecifico = await discordBot.channels.fetch(
-            process.env.CHANNEL_LOGS
-          );
+              let canalEspecifico = await discordBot.channels.fetch(
+                process.env.CHANNEL_LOGS
+              );
 
-          canalEspecifico.send(
-            "**" +
-              result.channel +
-              "** acabou de postar um novo vídeo!!! **Confira **" +
-              link
-          );
-          const separador =
-            "https://tenor.com/view/rainbow-color-line-colorful-change-color-gif-17422882";
-          canalEspecifico.send(separador);
-
-          //canalEspecifico.send({ embeds: [embed.toJSON()] });
+              canalEspecifico.send(
+                "**" +
+                  result.channel +
+                  "** acabou de postar um novo vídeo!!! **Confira **" +
+                  link
+              );
+              const separador =
+                "https://tenor.com/view/rainbow-color-line-colorful-change-color-gif-17422882";
+              canalEspecifico.send(separador);
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao chamar YTBWARN:", error);
         }
       }
-    } catch (error) {
-      console.error("Erro ao chamar YTBWARN:", error);
     }
+  } catch (error) {
+    console.error("Erro ao obter guildas com YOUTUBENOTIFY:", error);
   }
+
   // Intervalo entre a re-chamada
   setTimeout(() => s.call(discordBot), 2 * 60 * 60 * 1000);
 };

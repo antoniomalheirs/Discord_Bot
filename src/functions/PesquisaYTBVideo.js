@@ -9,7 +9,8 @@ module.exports = async function (channel) {
 
   if (channel != null) {
     // Exemplo de uso da função findOne
-    const videoId = channel.lastVideo; // Substitua pelo seu ID real
+    const videoId = channel.lastVideo;
+    const guild = channel.notifyGuild; // Substitua pelo seu ID real
     const projection = {
       youtube: 1,
       channel: 1,
@@ -19,7 +20,8 @@ module.exports = async function (channel) {
       notifyGuild: 1,
     }; // Substitua pelos campos desejados
 
-    const result = await videoRepository.findOne(videoId, projection);
+    const result = await videoRepository.findByLastVideoAndGuildId(videoId,guild, projection);
+
 
     if (result != null) {
       return result; // Retorna o vídeo quando existe

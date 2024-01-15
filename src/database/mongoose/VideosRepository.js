@@ -67,8 +67,10 @@ module.exports = class VideosRepository extends Repository {
     return this.model.updateOne({ youtube: id }, entity, options);
   }
 
-  updateByYoutubeId(youtubeId, updateData, options = { new: true }) {
-    return this.model.findOneAndUpdate({ youtube: youtubeId }, updateData, options).then(this.parse);
+  updateByYoutubeIdAndGuildId(youtubeId, guildId, options = { new: true }) {
+    return this.model
+      .findOneAndUpdate({ youtube: youtubeId, notifyGuild: guildId }, options)
+      .then(this.parse);
   }
 
   async verify(id) {
@@ -79,12 +81,51 @@ module.exports = class VideosRepository extends Repository {
       : false;
   }
 
+  verifyByYoutubeAndGuildId(youtubeId, guildId) {
+    return this.model.exists({ youtube: youtubeId, notifyGuild: guildId });
+  }
+  
+
   findAll(projection) {
     return this.model.find({}, projection).then((e) => e.map(this.parse));
   }
 
   findAllByGuildId(guildId, projection) {
-    return this.model.find({ notifyGuild: guildId }, projection).then((results) => results.map(this.parse));
+    return this.model
+      .find({ notifyGuild: guildId }, projection)
+      .then((results) => results.map(this.parse));
   }
 
+  async getChannelsWithVideosByGuildId(guildId) {
+    try {
+      const videos = await this.model.find({ notifyGuild: guildId });
+    
+      // Retorna um array de objetos contendo youtube e lastVideo
+      return videos.map((video) => ({
+        youtube: video.youtube,
+        lastVideo: video.lastVideo,
+      }));
+    } catch (error) {
+      console.error("Erro ao obter canais com vídeos para a guilda:", error);
+      throw error;
+    }
+  }
+  
+
+  findByYoutubeAndGuildId(channelId, guildId, projection) {
+    return this.model
+      .findOne({ channel: channelId, notifyGuild: guildId }, projection)
+      .then(this.parse);
+  }
+
+  async findByLastVideoAndGuildId(lastVideo, guildId, projection) {
+    try {
+      const video = await this.model.findOne({ lastVideo, notifyGuild: guildId }, projection);
+      return video ? this.parse(video) : null;
+    } catch (error) {
+      console.error("Erro ao consultar dados por lastVideo e guildId:", error);
+      throw error;
+    }
+  }
+  
 };

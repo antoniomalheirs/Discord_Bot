@@ -37,8 +37,9 @@ module.exports = {
         notifyGuild: 1,
       };
 
-      const noBanco = await videoRepository.findByChannel(videoId, projection);
       const guildId = interaction.guild?.id;
+
+      const noBanco = await videoRepository.findByYoutubeAndGuildId(videoId, guildId, projection);
 
       if (noBanco != null) {
         return interaction.reply(
