@@ -42,12 +42,12 @@ module.exports = async function s() {
         //console.log(newVideo);
         try {
           const result = await YTBWARN.bind(this)(newVideo.youtube);
-
+        
           if (result.lastVideo != null) {
+            result.notifyGuild = guildId;
             const resultf = await PesquisaYTBVideo.bind(this)(result);
             console.log(resultf);
-            result.notifyGuild = guildId;
-            if (resultf) {
+            if (!resultf) {
               await RegistradorYTBVideo.bind(this)(result);
 
               const [titulo, link] = result.lastVideo.split(" || ");
