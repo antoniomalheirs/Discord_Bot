@@ -1,13 +1,21 @@
-# Discord WebPage DashBoard
+# Discord Bot para Discord
 
-Um site simples para voce se basear e fazer o controle do seu bot do discord usando um Banco de Dados e API's
+Um bot simples para voce se basear e criar um bot no discord usando um Banco de Dados e API's para implementar funcionalidades ao seu bot.
 
 ## Tecnologias usadas
 * Node.js
+* Discord.js
 * MongoDB
 
 ## Linguagen utilizada
 * JavaScript para o Backend e MongoDB
+
+## Demostraçâo de Funcionalidades
+| ![BOT](https://github.com/antoniomalheirs/Discord_Bot/assets/79883711/2d867a7b-a74d-4eec-bf62-15eb584b96e4) | ![FUNCTIONS](https://github.com/antoniomalheirs/Discord_Bot/assets/79883711/9049a3b4-61a7-4ce8-b44a-1f83f5f6e124) | ![COMMANDS](https://github.com/antoniomalheirs/Discord_Bot/assets/79883711/19c1df6e-58bd-4a43-9e6a-5a6c20a7c0bb) |
+|---|---|---|
+| Bot | Functions | Commands |
+
+
 
 ## Pacotes necessarios
 ### Os comandos a seguir instalaram as versões especificadas no final do comando. 
