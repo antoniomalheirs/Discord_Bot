@@ -1,50 +1,55 @@
-const { SlashCommandBuilder } = require("discord.js");
-const discordBot = require("../Client"); // Certifique-se de importar corretamente o objeto discordBot
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("limpa")
-    .setDescription("Limpa o canal em que o comando foi inserido")
-    .addIntegerOption((option) =>
-      option
-        .setName("quant")
-        .setDescription("Número de mensagens a serem excluídas")
-        .setRequired(true)
-    ),
+    data: new SlashCommandBuilder()
+        .setName("limpa")
+        .setDescription("Limpa mensagens do canal atual")
+        .addIntegerOption(option =>
+            option
+                .setName("quant")
+                .setDescription("Número de mensagens a excluir (1 a 100)")
+                .setRequired(true)
+        )
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
-  async execute(interaction) {
-    try {
-      // Obtém o ID do canal em que o comando foi inserido
-      const canalAtualID = interaction.channelId;
-      //console.log(canalAtualID);
+    async execute(interaction) {
+        try {
+            const quantidade = interaction.options.getInteger("quant");
 
-      // Verifica se o canal é válido
-      const canalAtual = await discordBot.channels.fetch(canalAtualID);
-      
+            if (quantidade < 1 || quantidade > 100) {
+                return interaction.reply({
+                    content: "❌ Forneça um número entre **1** e **100**.",
+                    ephemeral: true,
+                });
+            }
 
-      // Obtém o número de mensagens a serem excluídas do parâmetro
-      const quantidade = interaction.options.getInteger("quant");
+            await interaction.deferReply({ ephemeral: true });
 
-      // Verifica se o valor está dentro do limite permitido (1 a 100)
-      if (quantidade < 1 || quantidade > 100) {
-        return interaction.reply(
-          "Por favor, forneça um número entre 1 e 100 para a quantidade de mensagens a serem excluídas."
-        );
-      }
+            const canal = interaction.channel;
 
-      // Obtém as mensagens no canal (limitado pelo número fornecido)
-      const mensagens = await canalAtual.messages.fetch({ limit: Math.min(quantidade + 1, 100) });
+            // Busca mensagens (inclui a do comando, por isso +1)
+            const mensagens = await canal.messages.fetch({ limit: quantidade + 1 });
 
-      // Verifica se há mensagens para excluir
-      if (mensagens.size > 1) {
-        await canalAtual.bulkDelete(mensagens);
-        await interaction.reply(`Foram excluídas ${quantidade} mensagens no canal.`);
-      } else {
-        await interaction.reply("Nenhuma mensagem para limpar.");
-      }
-    } catch (error) {
-      console.error("Erro ao limpar canal:", error);
-      await interaction.reply("Ocorreu um erro ao limpar o canal.");
-    }
-  },
+            // Filtra mensagens mais antigas que 14 dias
+            const mensagensValidas = mensagens.filter(
+                msg => Date.now() - msg.createdTimestamp < 14 * 24 * 60 * 60 * 1000
+            );
+
+            if (mensagensValidas.size < 1) {
+                return interaction.editReply("⚠️ Não há mensagens recentes para apagar (máx. 14 dias).");
+            }
+
+            await canal.bulkDelete(mensagensValidas, true);
+
+            return interaction.editReply(
+                `✅ Foram excluídas **${mensagensValidas.size}** mensagens no canal.`
+            );
+        } catch (error) {
+            console.error("Erro ao limpar canal:", error);
+            return interaction.reply({
+                content: "❌ Ocorreu um erro ao tentar limpar mensagens.",
+                ephemeral: true,
+            });
+        }
+    },
 };

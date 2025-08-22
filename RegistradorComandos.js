@@ -1,41 +1,40 @@
 const { REST, Routes } = require("discord.js");
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path"); // 1. Importe o módulo 'path'
 
-const commandsPath = "./src/slash/";
-const commandFiles = require("fs")
+const commands = [];
+// 2. Crie o caminho absoluto para a pasta de comandos
+const commandsPath = path.join(__dirname, "src", "slash");
+const commandFiles = fs
   .readdirSync(commandsPath)
   .filter((file) => file.endsWith(".js"));
 
-const commands = [];
 for (const file of commandFiles) {
-  const command = require(`${commandsPath}/${file}`);
-  commands.push(command.data.toJSON());
+  // 3. Crie o caminho absoluto para cada arquivo de comando
+  const filePath = path.join(commandsPath, file);
+  const command = require(filePath); // 4. Use o caminho completo e correto
+  if ("data" in command && "execute" in command) {
+    commands.push(command.data.toJSON());
+  } else {
+    console.log(`[AVISO] O comando em ${filePath} não possui a propriedade "data" ou "execute".`);
+  }
 }
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
-    console.log("Started refreshing application (/) commands.");
+    console.log(`Iniciando o registro de ${commands.length} comandos (/) globais.`);
 
-    const response = await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID
-      ),
+    const data = await rest.put(
+      Routes.applicationCommands(process.env.CLIENT_ID),
       {
         body: commands,
       }
     );
 
-    console.log("Successfully reloaded application (/) commands.");
-
-    // Imprima os IDs e nomes dos comandos
-    const commandInfo = response.map((command) => ({
-      id: command.id,
-      name: command.name,
-    }));
-    console.log("Command IDs and Names:", commandInfo);
+    console.log(`Sucesso! ${data.length} comandos (/) globais foram registrados.`);
   } catch (error) {
     console.error(error);
   }
