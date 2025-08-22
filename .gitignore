@@ -1,9 +1,4 @@
 node_modules
-
 .env
-
 package-lock.json
-
-discloud.config
-
-discloud.ignore
+discloud*

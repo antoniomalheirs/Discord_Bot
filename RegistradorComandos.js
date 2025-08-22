@@ -3,25 +3,18 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path"); // 1. Importe o módulo 'path'
 
-const commands = [];
-// 2. Crie o caminho absoluto para a pasta de comandos
-const commandsPath = path.join(__dirname, "src", "slash");
-const commandFiles = fs
+const commandsPath = "./src/slash";
+const commandFiles = require("fs")
   .readdirSync(commandsPath)
   .filter((file) => file.endsWith(".js"));
 
+const commands = [];
 for (const file of commandFiles) {
-  // 3. Crie o caminho absoluto para cada arquivo de comando
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath); // 4. Use o caminho completo e correto
-  if ("data" in command && "execute" in command) {
-    commands.push(command.data.toJSON());
-  } else {
-    console.log(`[AVISO] O comando em ${filePath} não possui a propriedade "data" ou "execute".`);
-  }
+  const command = require(`${commandsPath}/${file}`);
+  commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
@@ -30,7 +23,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
     const data = await rest.put(
       Routes.applicationCommands(process.env.CLIENT_ID),
       {
-        body: commands,
+        body: commands
       }
     );
 

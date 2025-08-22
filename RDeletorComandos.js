@@ -17,14 +17,6 @@ const rest = new REST({ version: "10" }).setToken(token);
           console.error("Error deleting all guild commands:", error)
         );
   
-      // Para comandos globais
-      await rest
-        .put(Routes.applicationCommands(clientId), { body: [] })
-        .then(() => console.log("Successfully deleted all application commands."))
-        .catch((error) =>
-          console.error("Error deleting all application commands:", error)
-        );
-  
       console.log("Finished deleting all application (/) commands.");
     } catch (error) {
       console.error(error);
